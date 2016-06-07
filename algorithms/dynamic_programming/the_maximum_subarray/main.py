@@ -11,7 +11,7 @@
 
 import sys
 
-DEBUG = 1
+DEBUG = 0
 
 if DEBUG:
     handler = open("./input")
