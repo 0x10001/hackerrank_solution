@@ -6,11 +6,11 @@
   @license: MIT Licence 
   @contact: ericwong@zju.edu.cn
      @file: main.py
-     @time: 2016-06-08 12:42
+     @time: 2016-06-09 16:33
 """
 
 import sys
-from functools import reduce
+import timeit
 
 DEBUG = 1
 
@@ -22,56 +22,46 @@ else:
 cases = int(handler.readline())
 MOD = 1000000007
 
+mem = {}
+
+
+def mirror(grid, upper_bound):
+    ret = list(grid)
+    for i in range(len(grid)):
+        if ret[i] * 2 > upper_bound[i] + 1:
+            ret[i] = upper_bound[i] + 1 - grid[i]
+    return tuple(ret)
+
+
+def calc(grid, moves, upper_bound):
+    if moves == 0:
+        return 1
+
+    grid = mirror(grid, upper_bound)
+    if (moves, grid) in mem:
+        return mem[moves, grid]
+
+    ret = 0
+    for i in range(len(grid)):
+        front_slice, end_slice = grid[:i], grid[i + 1:]
+        if 1 < grid[i]:
+            ret += calc(front_slice + (grid[i] - 1,) + end_slice,
+                        moves - 1, upper_bound)
+        if grid[i] < upper_bound[i]:
+            ret += calc(front_slice + (grid[i] + 1,) + end_slice,
+                        moves - 1, upper_bound)
+
+    ret %= MOD
+    mem[moves, grid] = ret
+    return ret
+
+
 for _ in range(cases):
     dimensions, steps = map(int, handler.readline().split())
     start = tuple(map(int, handler.readline().split()))
     limits = tuple(map(int, handler.readline().split()))
-
-    buf = {limits: 1}
-    '''
-    grid = []
-    num_grid = reduce(lambda x, y: x * y, limits, 1)
-    for grid_id in range(num_grid):
-        for limit in limits:
-            grid.append(grid_id % limit + 1)
-            grid_id //= limit
-        buf[tuple(grid)] = 0
-        grid.clear()
-    '''
-
-    grid = [1] * dimensions
-    while tuple(grid) < limits:
-        buf[tuple(grid)] = 1
-        grid[0] += 1
-        for d in range(dimensions):
-            if grid[d] > limits[d]:
-                grid[d] = 1
-                grid[d + 1] += 1
-            else:
-                break
-
-
-    def calc(g):
-        ret = 0
-        for d in range(dimensions):
-            front_slice, end_slice = g[:d], g[d + 1:]
-            upper = front_slice + (g[d] + 1,) + end_slice
-            lower = front_slice + (g[d] - 1,) + end_slice
-            if 1 < g[d]:
-                ret += buf[lower]
-            if g[d] < limits[d]:
-                ret += buf[upper]
-        return ret % MOD
-
-
-    for move in range(steps):
-        data = {}
-        if move == steps - 1:
-            print(calc(start))
-            break
-
-        for grid in buf:
-            data[grid] = calc(grid)
-        buf = data
+    mem.clear()
+    calc(start, steps, limits)
+    # print(timeit.timeit(lambda: calc(start, steps, limits)))
 
 handler.close()

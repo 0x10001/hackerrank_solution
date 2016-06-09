@@ -6,7 +6,7 @@
   @license: MIT Licence 
   @contact: ericwong@zju.edu.cn
      @file: ${NAME}.py
-     @time: ${YEAR}-${MONTH}-${DAY} ${HOUR}-${MINUTE}
+     @time: ${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}
 """
 
 import sys
