@@ -5,7 +5,7 @@
    @author: Eric Wong
   @license: MIT Licence 
   @contact: ericwong@zju.edu.cn
-     @file: main_bak.py
+     @file: main.py
      @time: 2016-06-07 23:44
 """
 
