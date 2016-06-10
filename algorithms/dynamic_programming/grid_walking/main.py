@@ -82,7 +82,7 @@ def cmb(n, k):
 # which describes that each time we pick `i` from the `m` steps to move on `d`th dimension,
 # the result in this case would be that of `m-i` steps from the previous `d-1` dimensions,
 # multiplied by that of the moves on `d`th dimension.
-# Well, don't forget the ways to pick `i` from the `m` steps (`cmb(m, i)`).
+# Well, don't forget the ways of picking `i` from the `m` steps (`cmb(m, i)`).
 def calc_total(start, limits, steps):
     dimensions = len(start)
     if (dimensions, steps) in cache:
